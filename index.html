@@ -2,21 +2,25 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=300, initial-scale=1.0">
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 60px;
-  background: transparent;
+  width: 300px;
+  height: 50px;
   overflow: hidden;
+  background: transparent;
 }
 
 .cart-box {
-  width: 100%;
-  height: 60px;
+  width: 300px;
+  height: 50px;
 
   display: flex;
   justify-content: center;
@@ -24,6 +28,8 @@ html, body {
 }
 
 .add-cart-btn {
+  display: block;
+
   width: 160px;
   height: 30px;
 
@@ -34,7 +40,7 @@ html, body {
   border-radius: 18px;
 
   background: #0b8f5a;
-  color: #fff;
+  color: white;
 
   font-family: "Times New Roman", serif;
   font-size: 12px;
@@ -43,8 +49,7 @@ html, body {
   white-space: nowrap;
   cursor: pointer;
 
-  transition: background 0.15s ease,
-              transform 0.1s ease;
+  transition: 0.15s ease;
 }
 
 .add-cart-btn:hover {
@@ -52,12 +57,11 @@ html, body {
 }
 
 .add-cart-btn:active {
-  background: #000;
-  transform: scale(0.97);
+  background: #000000;
 }
 
 .add-cart-btn.added {
-  background: #000;
+  background: #000000;
 }
 </style>
 </head>
@@ -71,6 +75,7 @@ html, body {
 </div>
 
 <script>
+
 const product = {
   id: "yen-tinh-che",
   name: "YẾN TINH CHẾ",
@@ -79,7 +84,7 @@ const product = {
 
 const button = document.getElementById("addBtn");
 
-button.addEventListener("click", function () {
+button.addEventListener("click", function() {
 
   let cart = JSON.parse(
     localStorage.getItem("anhLinhCart") || "[]"
@@ -108,12 +113,13 @@ button.addEventListener("click", function () {
   button.classList.add("added");
   button.textContent = "✓ ĐÃ THÊM";
 
-  setTimeout(function () {
+  setTimeout(function() {
     button.classList.remove("added");
     button.textContent = "THÊM VÀO GIỎ HÀNG";
   }, 1200);
 
 });
+
 </script>
 
 </body>
