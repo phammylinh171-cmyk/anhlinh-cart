@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -15,6 +17,7 @@ body {
   font-family: "Times New Roman", serif;
 }
 
+/* KHU VỰC NÚT */
 .cart-area {
   width: 100%;
   display: flex;
@@ -22,129 +25,221 @@ body {
   padding: 8px;
 }
 
+/* NÚT THÊM GIỎ HÀNG */
 .add-cart-btn {
-  width: 100%;
-  max-width: 330px;
-  padding: 14px 22px;
-  border: 1px solid #c9a44c;
-  border-radius: 30px;
-  background: #111;
-  color: #d8b65a;
+  width: 230px;
+  padding: 11px 16px;
+
+  border: 1px solid #0b8f5a;
+  border-radius: 25px;
+
+  background: #0b8f5a;
+  color: white;
+
   font-family: "Times New Roman", serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+
   cursor: pointer;
+
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+/* HIỆU ỨNG KHI RÊ CHUỘT */
 .add-cart-btn:hover {
-  background: #d8b65a;
-  color: #111;
+  background: #087548;
+  border-color: #087548;
+  color: white;
+
   transform: translateY(-2px);
+
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
+/* THÔNG BÁO ĐÃ THÊM */
 .message {
   position: fixed;
+
   left: 50%;
   bottom: 25px;
+
   transform: translateX(-50%) translateY(20px);
+
   background: #111;
   color: #d8b65a;
+
   border: 1px solid #d8b65a;
+
   padding: 12px 20px;
+
   border-radius: 25px;
+
   font-family: "Times New Roman", serif;
   font-size: 15px;
+
   opacity: 0;
   visibility: hidden;
+
   transition: all 0.3s ease;
+
   z-index: 9999;
+
   white-space: nowrap;
 }
 
+/* HIỆN THÔNG BÁO */
 .message.show {
   opacity: 1;
   visibility: visible;
+
   transform: translateX(-50%) translateY(0);
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="cart-area">
-  <button class="add-cart-btn" onclick="addToCart()">
+
+  <button
+    class="add-cart-btn"
+    onclick="addToCart()">
+
     🛒 &nbsp; THÊM VÀO GIỎ HÀNG
+
   </button>
+
 </div>
 
+
 <div id="message" class="message">
+
   ✓ Đã thêm sản phẩm vào giỏ hàng
+
 </div>
+
 
 <script>
 
+/* ================================
+   THÔNG TIN SẢN PHẨM
+================================ */
+
 const product = {
+
   id: "yen-tinh-che",
+
   name: "YẾN TINH CHẾ",
+
   price: 1750000
+
 };
 
 
+/* ================================
+   LẤY GIỎ HÀNG
+================================ */
+
 function getCart() {
+
   try {
+
     return JSON.parse(
       localStorage.getItem("anhLinhCart")
     ) || [];
+
   } catch (e) {
+
     return [];
+
   }
+
 }
 
 
+/* ================================
+   LƯU GIỎ HÀNG
+================================ */
+
 function saveCart(cart) {
+
   localStorage.setItem(
     "anhLinhCart",
     JSON.stringify(cart)
   );
+
 }
 
+
+/* ================================
+   THÊM SẢN PHẨM
+================================ */
 
 function addToCart() {
 
   let cart = getCart();
 
+  /* Kiểm tra sản phẩm đã có chưa */
+
   let existing = cart.find(
     item => item.id === product.id
   );
+
+
+  /* Nếu đã có → tăng số lượng */
 
   if (existing) {
 
     existing.quantity += 1;
 
-  } else {
+  }
+
+
+  /* Nếu chưa có → thêm mới */
+
+  else {
 
     cart.push({
+
       id: product.id,
+
       name: product.name,
+
       price: product.price,
+
       quantity: 1
+
     });
 
   }
 
+
+  /* Lưu lại */
+
   saveCart(cart);
+
+
+  /* Hiện thông báo */
 
   const message =
     document.getElementById("message");
 
   message.classList.add("show");
 
+
+  /* Tắt thông báo sau 1.8 giây */
+
   setTimeout(() => {
+
     message.classList.remove("show");
+
   }, 1800);
+
 }
 
 </script>
