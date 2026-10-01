@@ -1,1 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  font-family: "Times New Roman", serif;
+}
+
+.cart-area {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+}
+
+.add-cart-btn {
+  width: 100%;
+  max-width: 330px;
+  padding: 14px 22px;
+  border: 1px solid #c9a44c;
+  border-radius: 30px;
+  background: #111;
+  color: #d8b65a;
+  font-family: "Times New Roman", serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+}
+
+.add-cart-btn:hover {
+  background: #d8b65a;
+  color: #111;
+  transform: translateY(-2px);
+}
+
+.message {
+  position: fixed;
+  left: 50%;
+  bottom: 25px;
+  transform: translateX(-50%) translateY(20px);
+  background: #111;
+  color: #d8b65a;
+  border: 1px solid #d8b65a;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-family: "Times New Roman", serif;
+  font-size: 15px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 9999;
+  white-space: nowrap;
+}
+
+.message.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="cart-area">
+  <button class="add-cart-btn" onclick="addToCart()">
+    🛒 &nbsp; THÊM VÀO GIỎ HÀNG
+  </button>
+</div>
+
+<div id="message" class="message">
+  ✓ Đã thêm sản phẩm vào giỏ hàng
+</div>
+
+<script>
+
+const product = {
+  id: "yen-tinh-che",
+  name: "YẾN TINH CHẾ",
+  price: 1750000
+};
+
+
+function getCart() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("anhLinhCart")
+    ) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+
+function saveCart(cart) {
+  localStorage.setItem(
+    "anhLinhCart",
+    JSON.stringify(cart)
+  );
+}
+
+
+function addToCart() {
+
+  let cart = getCart();
+
+  let existing = cart.find(
+    item => item.id === product.id
+  );
+
+  if (existing) {
+
+    existing.quantity += 1;
+
+  } else {
+
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1
+    });
+
+  }
+
+  saveCart(cart);
+
+  const message =
+    document.getElementById("message");
+
+  message.classList.add("show");
+
+  setTimeout(() => {
+    message.classList.remove("show");
+  }, 1800);
+}
+
+</script>
+
+</body>
+</html>
