@@ -8,54 +8,52 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: transparent;
+  width: 150px;
+  height: 30px;
   overflow: hidden;
+  background: transparent;
 }
 
 .cart-box {
-  width: 260px;
-  height: 34px;
-  margin: 0 auto;
+  width: 150px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
 }
 
 .add-cart-btn {
-  width: 260px;
-  height: 34px;
+  width: 150px;
+  height: 30px;
 
   padding: 0;
   margin: 0;
 
   border: none;
-  border-radius: 3px;
+  border-radius: 18px;
 
   background: #0b8f5a;
-  color: white;
+  color: #ffffff;
 
   font-family: "Times New Roman", serif;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: bold;
 
   white-space: nowrap;
-  overflow: hidden;
+  line-height: 30px;
 
   cursor: pointer;
 
-  transition: background 0.15s ease,
-              transform 0.1s ease;
+  transition: background 0.15s ease;
 }
 
-/* Rê chuột */
 .add-cart-btn:hover {
   background: #087548;
 }
 
-/* Khi bấm */
 .add-cart-btn:active {
   background: #000000;
-  transform: scale(0.98);
 }
 
-/* Sau khi thêm */
 .add-cart-btn.added {
   background: #000000;
 }
@@ -65,11 +63,9 @@ html, body {
 <body>
 
 <div class="cart-box">
-
   <button class="add-cart-btn" id="addBtn">
     THÊM VÀO GIỎ HÀNG
   </button>
-
 </div>
 
 <script>
@@ -82,7 +78,7 @@ const product = {
 
 const button = document.getElementById("addBtn");
 
-button.addEventListener("click", function () {
+button.addEventListener("click", function() {
 
   let cart = JSON.parse(
     localStorage.getItem("anhLinhCart") || "[]"
@@ -93,18 +89,14 @@ button.addEventListener("click", function () {
   );
 
   if (existing) {
-
     existing.quantity += 1;
-
   } else {
-
     cart.push({
       id: product.id,
       name: product.name,
       price: product.price,
       quantity: 1
     });
-
   }
 
   localStorage.setItem(
@@ -112,16 +104,12 @@ button.addEventListener("click", function () {
     JSON.stringify(cart)
   );
 
-  /* Đổi sang màu đen */
   button.classList.add("added");
-  button.textContent = "✓ ĐÃ THÊM VÀO GIỎ";
+  button.textContent = "✓ ĐÃ THÊM";
 
-  /* Sau 1.2 giây trở lại */
-  setTimeout(function () {
-
+  setTimeout(function() {
     button.classList.remove("added");
     button.textContent = "THÊM VÀO GIỎ HÀNG";
-
   }, 1200);
 
 });
