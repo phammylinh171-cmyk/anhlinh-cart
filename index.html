@@ -8,49 +8,43 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: auto;
-  overflow: hidden;
   background: transparent;
+  overflow: hidden;
 }
 
 .cart-box {
-  display: inline-block;
-  width: auto;
-  padding: 0;
-  margin: 0;
+  width: 260px;
+  height: 34px;
+  margin: 0 auto;
 }
 
 .add-cart-btn {
-  display: inline-block;
+  width: 260px;
+  height: 34px;
 
-  width: auto;
-  min-width: 0;
-
-  padding: 8px 18px;
+  padding: 0;
   margin: 0;
 
   border: none;
-  border-radius: 20px;
+  border-radius: 3px;
 
   background: #0b8f5a;
-  color: #ffffff;
+  color: white;
 
   font-family: "Times New Roman", serif;
   font-size: 15px;
   font-weight: bold;
 
-  line-height: 1.2;
   white-space: nowrap;
+  overflow: hidden;
 
   cursor: pointer;
 
-  transition: all 0.15s ease;
-
-  box-shadow: none;
+  transition: background 0.15s ease,
+              transform 0.1s ease;
 }
 
-/* Khi rê chuột */
+/* Rê chuột */
 .add-cart-btn:hover {
   background: #087548;
 }
@@ -58,7 +52,7 @@ html, body {
 /* Khi bấm */
 .add-cart-btn:active {
   background: #000000;
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
 /* Sau khi thêm */
@@ -71,9 +65,11 @@ html, body {
 <body>
 
 <div class="cart-box">
+
   <button class="add-cart-btn" id="addBtn">
-    THÊM VÀO GIỎ
+    THÊM VÀO GIỎ HÀNG
   </button>
+
 </div>
 
 <script>
@@ -86,7 +82,7 @@ const product = {
 
 const button = document.getElementById("addBtn");
 
-button.addEventListener("click", function() {
+button.addEventListener("click", function () {
 
   let cart = JSON.parse(
     localStorage.getItem("anhLinhCart") || "[]"
@@ -97,14 +93,18 @@ button.addEventListener("click", function() {
   );
 
   if (existing) {
+
     existing.quantity += 1;
+
   } else {
+
     cart.push({
       id: product.id,
       name: product.name,
       price: product.price,
       quantity: 1
     });
+
   }
 
   localStorage.setItem(
@@ -112,12 +112,16 @@ button.addEventListener("click", function() {
     JSON.stringify(cart)
   );
 
+  /* Đổi sang màu đen */
   button.classList.add("added");
-  button.textContent = "✓ ĐÃ THÊM";
+  button.textContent = "✓ ĐÃ THÊM VÀO GIỎ";
 
-  setTimeout(() => {
+  /* Sau 1.2 giây trở lại */
+  setTimeout(function () {
+
     button.classList.remove("added");
-    button.textContent = "THÊM VÀO GIỎ";
+    button.textContent = "THÊM VÀO GIỎ HÀNG";
+
   }, 1200);
 
 });
