@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  font-family: "Times New Roman", serif;
+  color: #222;
+}
+
+.cart-container {
+  width: 100%;
+  max-width: 850px;
+  margin: auto;
+  padding: 15px;
+}
+
+.cart-title {
+  text-align: center;
+  font-size: 30px;
+  color: #b08a2e;
+  font-weight: bold;
+  margin: 10px 0 25px;
+}
+
+.cart-box {
+  background: white;
+  border: 1px solid #d7bd76;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px;
+  border-bottom: 1px solid #eee;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+.item-price {
+  color: #a27b20;
+  font-size: 15px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #c9a44c;
+  border-radius: 50%;
+  background: #111;
+  color: #d8b65a;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.quantity span {
+  min-width: 25px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.item-total {
+  min-width: 130px;
+  text-align: right;
+  color: #a27b20;
+  font-weight: bold;
+}
+
+.remove {
+  border: none;
+  background: transparent;
+  color: #999;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.cart-bottom {
+  padding: 22px;
+  background: #faf8f1;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 21px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.total-price {
+  color: #a27b20;
+}
+
+.empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: #777;
+  font-size: 18px;
+}
+
+.order-btn {
+  width: 100%;
+  border: none;
+  border-radius: 30px;
+  background: #111;
+  color: #d8b65a;
+  padding: 15px;
+  font-family: "Times New Roman", serif;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.order-btn:hover {
+  background: #d8b65a;
+  color: #111;
+}
+
+@media(max-width:600px) {
+
+  .cart-title {
+    font-size: 25px;
+  }
+
+  .cart-item {
+    flex-wrap: wrap;
+  }
+
+  .item-info {
+    width: calc(100% - 30px);
+  }
+
+  .item-total {
+    min-width: auto;
+    margin-left: auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="cart-container">
+
+  <div class="cart-title">
+    🛒 GIỎ HÀNG
+  </div>
+
+  <div id="cart"></div>
+
+</div>
+
+<script>
+
+function getCart() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("anhLinhCart")
+    ) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+
+function saveCart(cart) {
+  localStorage.setItem(
+    "anhLinhCart",
+    JSON.stringify(cart)
+  );
+}
+
+
+function money(number) {
+  return number.toLocaleString("vi-VN") + " VND";
+}
+
+
+function renderCart() {
+
+  const cart = getCart();
+  const container = document.getElementById("cart");
+
+  if (cart.length === 0) {
+
+    container.innerHTML = `
+      <div class="cart-box">
+        <div class="empty">
+          🛒
+          <br><br>
+          Giỏ hàng của bạn đang trống.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  let total = 0;
+
+  let html = `
+    <div class="cart-box">
+  `;
+
+  cart.forEach((item, index) => {
+
+    const itemTotal =
+      item.price * item.quantity;
+
+    total += itemTotal;
+
+    html += `
+      <div class="cart-item">
+
+        <div class="item-info">
+
+          <div class="item-name">
+            ${item.name}
+          </div>
+
+          <div class="item-price">
+            ${money(item.price)}
+          </div>
+
+        </div>
+
+        <div class="quantity">
+
+          <button onclick="changeQuantity(${index}, -1)">
+            −
+          </button>
+
+          <span>
+            ${item.quantity}
+          </span>
+
+          <button onclick="changeQuantity(${index}, 1)">
+            +
+          </button>
+
+        </div>
+
+        <div class="item-total">
+          ${money(itemTotal)}
+        </div>
+
+        <button
+          class="remove"
+          onclick="removeItem(${index})">
+          ×
+        </button>
+
+      </div>
+    `;
+  });
+
+  html += `
+
+      <div class="cart-bottom">
+
+        <div class="total-row">
+
+          <span>TỔNG CỘNG</span>
+
+          <span class="total-price">
+            ${money(total)}
+          </span>
+
+        </div>
+
+        <button
+          class="order-btn"
+          onclick="orderNow()">
+          ĐẶT HÀNG
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+
+function changeQuantity(index, change) {
+
+  let cart = getCart();
+
+  cart[index].quantity += change;
+
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
+
+  saveCart(cart);
+
+  renderCart();
+}
+
+
+function removeItem(index) {
+
+  let cart = getCart();
+
+  cart.splice(index, 1);
+
+  saveCart(cart);
+
+  renderCart();
+}
+
+
+function orderNow() {
+
+  const cart = getCart();
+
+  if (cart.length === 0) {
+    alert("Giỏ hàng đang trống.");
+    return;
+  }
+
+  let message =
+    "ĐẶT HÀNG YẾN SÀO ÁNH LINH\n\n";
+
+  let total = 0;
+
+  cart.forEach(item => {
+
+    const itemTotal =
+      item.price * item.quantity;
+
+    total += itemTotal;
+
+    message +=
+      "• " +
+      item.name +
+      " x" +
+      item.quantity +
+      " - " +
+      money(itemTotal) +
+      "\n";
+  });
+
+  message +=
+    "\nTỔNG: " +
+    money(total);
+
+  alert(message);
+}
+
+renderCart();
+
+</script>
+
+</body>
+</html>
