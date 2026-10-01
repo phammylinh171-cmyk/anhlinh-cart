@@ -1,246 +1,126 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
-* {
-  box-sizing: border-box;
-}
-
-body {
+html, body {
   margin: 0;
-  background: transparent;
-  font-family: "Times New Roman", serif;
-}
-
-/* KHU VỰC NÚT */
-.cart-area {
+  padding: 0;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 8px;
+  height: auto;
+  overflow: hidden;
+  background: transparent;
 }
 
-/* NÚT THÊM GIỎ HÀNG */
-.add-cart-btn {
-  width: 230px;
-  padding: 11px 16px;
+.cart-box {
+  display: inline-block;
+  width: auto;
+  padding: 0;
+  margin: 0;
+}
 
-  border: 1px solid #0b8f5a;
-  border-radius: 25px;
+.add-cart-btn {
+  display: inline-block;
+
+  width: auto;
+  min-width: 0;
+
+  padding: 8px 18px;
+  margin: 0;
+
+  border: none;
+  border-radius: 20px;
 
   background: #0b8f5a;
-  color: white;
-
-  font-family: "Times New Roman", serif;
-  font-size: 16px;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-
-  cursor: pointer;
-
-  transition: all 0.3s ease;
-
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* HIỆU ỨNG KHI RÊ CHUỘT */
-.add-cart-btn:hover {
-  background: #087548;
-  border-color: #087548;
-  color: white;
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-}
-
-/* THÔNG BÁO ĐÃ THÊM */
-.message {
-  position: fixed;
-
-  left: 50%;
-  bottom: 25px;
-
-  transform: translateX(-50%) translateY(20px);
-
-  background: #111;
-  color: #d8b65a;
-
-  border: 1px solid #d8b65a;
-
-  padding: 12px 20px;
-
-  border-radius: 25px;
+  color: #ffffff;
 
   font-family: "Times New Roman", serif;
   font-size: 15px;
+  font-weight: bold;
 
-  opacity: 0;
-  visibility: hidden;
-
-  transition: all 0.3s ease;
-
-  z-index: 9999;
-
+  line-height: 1.2;
   white-space: nowrap;
+
+  cursor: pointer;
+
+  transition: all 0.15s ease;
+
+  box-shadow: none;
 }
 
-/* HIỆN THÔNG BÁO */
-.message.show {
-  opacity: 1;
-  visibility: visible;
-
-  transform: translateX(-50%) translateY(0);
+/* Khi rê chuột */
+.add-cart-btn:hover {
+  background: #087548;
 }
 
+/* Khi bấm */
+.add-cart-btn:active {
+  background: #000000;
+  transform: scale(0.96);
+}
+
+/* Sau khi thêm */
+.add-cart-btn.added {
+  background: #000000;
+}
 </style>
-
 </head>
 
 <body>
 
-<div class="cart-area">
-
-  <button
-    class="add-cart-btn"
-    onclick="addToCart()">
-
-    🛒 &nbsp; THÊM VÀO GIỎ HÀNG
-
+<div class="cart-box">
+  <button class="add-cart-btn" id="addBtn">
+    THÊM VÀO GIỎ
   </button>
-
 </div>
-
-
-<div id="message" class="message">
-
-  ✓ Đã thêm sản phẩm vào giỏ hàng
-
-</div>
-
 
 <script>
 
-/* ================================
-   THÔNG TIN SẢN PHẨM
-================================ */
-
 const product = {
-
   id: "yen-tinh-che",
-
   name: "YẾN TINH CHẾ",
-
   price: 1750000
-
 };
 
+const button = document.getElementById("addBtn");
 
-/* ================================
-   LẤY GIỎ HÀNG
-================================ */
+button.addEventListener("click", function() {
 
-function getCart() {
+  let cart = JSON.parse(
+    localStorage.getItem("anhLinhCart") || "[]"
+  );
 
-  try {
+  const existing = cart.find(
+    item => item.id === product.id
+  );
 
-    return JSON.parse(
-      localStorage.getItem("anhLinhCart")
-    ) || [];
-
-  } catch (e) {
-
-    return [];
-
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1
+    });
   }
-
-}
-
-
-/* ================================
-   LƯU GIỎ HÀNG
-================================ */
-
-function saveCart(cart) {
 
   localStorage.setItem(
     "anhLinhCart",
     JSON.stringify(cart)
   );
 
-}
-
-
-/* ================================
-   THÊM SẢN PHẨM
-================================ */
-
-function addToCart() {
-
-  let cart = getCart();
-
-  /* Kiểm tra sản phẩm đã có chưa */
-
-  let existing = cart.find(
-    item => item.id === product.id
-  );
-
-
-  /* Nếu đã có → tăng số lượng */
-
-  if (existing) {
-
-    existing.quantity += 1;
-
-  }
-
-
-  /* Nếu chưa có → thêm mới */
-
-  else {
-
-    cart.push({
-
-      id: product.id,
-
-      name: product.name,
-
-      price: product.price,
-
-      quantity: 1
-
-    });
-
-  }
-
-
-  /* Lưu lại */
-
-  saveCart(cart);
-
-
-  /* Hiện thông báo */
-
-  const message =
-    document.getElementById("message");
-
-  message.classList.add("show");
-
-
-  /* Tắt thông báo sau 1.8 giây */
+  button.classList.add("added");
+  button.textContent = "✓ ĐÃ THÊM";
 
   setTimeout(() => {
+    button.classList.remove("added");
+    button.textContent = "THÊM VÀO GIỎ";
+  }, 1200);
 
-    message.classList.remove("show");
-
-  }, 1800);
-
-}
+});
 
 </script>
 
